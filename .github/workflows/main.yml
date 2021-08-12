@@ -1,56 +1,56 @@
-# This is a basic workflow to help you get started with Actions
+# This is a basic workflow to help you get started with Actions #ชื่ออะไร
 
 name: Deploy to Google Cloud Functions
 
-# Controls when the action will run. 
-on:
-  # Triggers the workflow on push event for the main branch
-  push:
+# Controls when the action will run.  # กำหนดให้ workflow ทำงานตอนไหน
+on: 
+  # Triggers the workflow on push event for the main branch # ให้ทำงานตอน push เข้า Git
+  push: 
     branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Allows you to run this workflow manually from the Actions tab #กดแบบ manual
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel # ให้ตัว workflow นี้ทำอะไรบ้าง
 jobs:
-  # This workflow contains a single job called "build"
+  # This workflow contains a single job called "build" #ชื่อ job
   build:
-    # The type of runner that the job will run on
+    # The type of runner that the job will run on # run บน linux
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it #ดึงโค้ดล่าสุด
+      - uses: actions/checkout@v2 
 
-      # Runs a single command using the runners shell
+      # Runs a single command using the runners shell # ปริ้นว่า Ready
       - name: Ready for deployment
         run: echo Ready for deployment
           
-      - name: Setup GCloud
+      - name: Setup GCloud # Set up Google Cloud เชื่อมต่อกับ Github
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJ_NAME }}
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-          export_default_credentials: true
+          export_default_credentials: true #export ตัวconnectionเพื่อให้ ไป deploy ต่อได้
       
-      - name: Deploy Cloud Functions
-        uses: google-github-actions/deploy-cloud-functions@main
+      - name: Deploy Cloud Functions # deploy cloud functions
+        uses: google-github-actions/deploy-cloud-functions@main # ดึงตัว actions ที่ google สร้างขึ้น ชื่อ deploy-cloud-functions@main มาใช้งาน
         with:
-          # Name of the Cloud Function.
+          # Name of the Cloud Function. #ให้สร้าง cloud function ชื่อว่า insert_data
           name: insert_data
           # Description for the Cloud Function.
           description: test-description
-          # Region to deploy the function in. Defaults to us-central1, if not specified.
+          # Region to deploy the function in. Defaults to us-central1, if not specified. #deploy ที่ไหน
           region: us-central1
           # Name of a function (as defined in source code) that will be executed. Defaults to the resource name suffix, if not specified. 
-          entry_point: insert_data
+          entry_point: insert_data #ชื่อ function ที่อยากให้ทำงาน
           # Runtime to use for the function.
-          runtime: python38
-          env_vars_file: .github/env/env.yaml
-          event_trigger_type: providers/cloud.pubsub/eventTypes/topic.publish
+          runtime: python38 # 
+          env_vars_file: .github/env/env.yaml #เก็บค่าที่เอาไว้ setup cloud function ตัวนี้
+          event_trigger_type: providers/cloud.pubsub/eventTypes/topic.publish   ### trigger ด้วย pub/sub ยิงเข้าไปที่ Cloud Functions
           event_trigger_resource: projects/${{ secrets.GCP_PROJ_NAME }}/topics/trigger-github-actions-deploy-gf
           
-      # Runs a single command using the runners shell
+      # Runs a single command using the runners shell #ปริ้นว่า Complete
       - name: Deployment has completed
         run: echo Deployment has completed
