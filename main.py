@@ -25,7 +25,7 @@ def get_data(url: str) -> dict:
     return response.json()
 
 
-def insert_data(event, context): ## ตัว event context เป็นตัวแปร ที่ pub sub ใช้ แต่ไม่ต้องใช้ก็ได้ ใช้เมื่อต้องการใส่พารามิเตอร์ ที่ต้อง input ค่าเข้ามา แต่อันนี้เรา input มาหมดแล้ว
+def insert_data(event, context): 
     """Background Cloud Function to be triggered by Pub/Sub.
     Args:
          event (dict): The dictionary with data specific to this type of event.
