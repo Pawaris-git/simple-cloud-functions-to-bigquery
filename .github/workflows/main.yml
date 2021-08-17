@@ -49,8 +49,8 @@ jobs:
           runtime: python38 # 
           env_vars_file: .github/env/env.yaml #เก็บค่าที่เอาไว้ setup cloud function ตัวนี้
           event_trigger_type: providers/cloud.pubsub/eventTypes/topic.publish   ### trigger ด้วย pub/sub ยิงเข้าไปที่ Cloud Functions
-          event_trigger_resource: projects/${{ secrets.GCP_PROJ_NAME }}/topics/trigger-github-actions-deploy-gf
-          
+          event_trigger_resource: projects/${{ secrets.GCP_PROJ_NAME }}/topics/trigger-github-actions-deploy-gf #(Optional) Specifies which resource from eventTrigger is observed.
+           
       # Runs a single command using the runners shell 
       - name: Deployment has completed
         run: echo Deployment has completed
